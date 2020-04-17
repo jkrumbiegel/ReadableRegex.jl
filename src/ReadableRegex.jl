@@ -12,7 +12,7 @@ function noncapturing_group_or_append(inner::String, outer::String)
     if isempty(inner)
         error("Empty inner string")
     else
-        noncapturing_group_or_token(string) * outer
+        noncapturing_group_or_token(inner) * outer
     end
 end
 
