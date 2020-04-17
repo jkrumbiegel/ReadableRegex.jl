@@ -24,17 +24,17 @@ function noncapturing_group_or_token(s::String)
     end
 end
 
-const WORD = rs"\w"
-const NOT_WORD = rs"\W"
-const DIGIT = rs"\d"
-const NOT_DIGIT = rs"\D"
-const WHITESPACE = rs"\s"
-const ANY_BUT_LINEBREAK = rs"."
-const ANY = rs"[\s\S]"
-const BEGIN = rs"^"
-const END = rs"$"
-const WORDBOUND = rs"\b"
-const NOT_WORDBOUND = rs"\B"
+WORD = rs"\w"
+NOT_WORD = rs"\W"
+DIGIT = rs"\d"
+NOT_DIGIT = rs"\D"
+WHITESPACE = rs"\s"
+ANY_BUT_LINEBREAK = rs"."
+ANY = rs"[\s\S]"
+BEGIN = rs"^"
+END = rs"$"
+WORDBOUND = rs"\b"
+NOT_WORDBOUND = rs"\B"
 
 escaped(s::String) = replace(s, r"([\\\.\+\^\$])" => s"\\\1")
 
@@ -51,6 +51,8 @@ optional(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "?"))
 any_number_of(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "*"))
 followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?=$(by.s))")
 not_followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?!$(by.s))")
+preceded_by(r::RegexString, by::RegexString) = RegexString("(?<=$(by.s))" * noncapturing_group_or_token(r.s))
+not_preceded_by(r::RegexString, by::RegexString) = RegexString("(?<!$(by.s))" * noncapturing_group_or_token(r.s))
 one_of(rs::RegexString...) = RegexString((join([noncapturing_group_or_token(r.s) for r in rs], "|")))
 
 at_least_one(x) = at_least_one(to_regexstring(x))
@@ -60,9 +62,13 @@ optional(x) = optional(to_regexstring(x))
 any_number_of(x) = any_number_of(to_regexstring(x))
 followed_by(x, by) = followed_by(to_regexstring(x), to_regexstring(by))
 not_followed_by(x, by) = not_followed_by(to_regexstring(x), to_regexstring(by))
+preceded_by(x, by) = preceded_by(to_regexstring(x), to_regexstring(by))
+not_preceded_by(x, by) = not_preceded_by(to_regexstring(x), to_regexstring(by))
 one_of(args...) = one_of(to_regexstring.(args)...)
 
 Base.:+(r1::RegexString, r2::RegexString) = RegexString(r1.s * r2.s)
+Base.:+(s::String, r::RegexString) = to_regexstring(s) + r
+Base.:+(r::RegexString, s::String) = r + to_regexstring(s)
 
 Regex(r::RegexString) = Regex(r.s)
 
@@ -85,5 +91,12 @@ Regex(at_least_one(DIGIT))
 str = "a1 b2 c3 d e5"
 eachmatch(not_followed_by('a':'z', DIGIT), str) .|> println
 
+str = """
+    some code + more code
+    ## comment
+    some more code
+    """
+
+match(preceded_by(at_least_one(WORD), "##" + WHITESPACE), str)
 
 end # module
