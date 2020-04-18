@@ -45,8 +45,6 @@ function noncapturing_group_or_token(s::String)
     end
 end
 
-const Optional{T} = Union{T, Nothing}
-
 const WORD = rs"\w"
 const NOT_WORD = rs"\W"
 const DIGIT = rs"\d"
@@ -78,27 +76,6 @@ not_followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_grou
 preceded_by(r::RegexString, by::RegexString) = RegexString("(?<=$(by.s))" * noncapturing_group_or_token(r.s))
 not_preceded_by(r::RegexString, by::RegexString) = RegexString("(?<!$(by.s))" * noncapturing_group_or_token(r.s))
 
-
-# function matchonly(r::RegexString;
-#         after::Optional{RegexString} = nothing,
-#         before::Optional{RegexString} = nothing,
-#         not_after::Optional{RegexString} = nothing,
-#         not_before::Optional{RegexString} = nothing)
-#
-#     if sum(isnothing.((after, before, not_after, not_before))) != 1
-#         error("This function takes exactly one keyword argument that is a RegexString")
-#     end
-#
-#     if !isnothing(after)
-#         preceded_by(r, after)
-#     elseif !isnothing(before)
-#         followed_by(r, before)
-#     elseif !isnothing(not_after)
-#         not_preceded_by(r, not_after)
-#     elseif !isnothing(not_before)
-#         not_followed_by(r, not_before)
-#     end
-# end
 
 function matchonly(r;
         after = nothing,
