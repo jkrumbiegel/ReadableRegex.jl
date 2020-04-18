@@ -15,7 +15,7 @@ a natural language description of the Regex. Here's an example:
 Quickly, what does this regex do?
 
 ```julia
-regex = r"[\+-]\d*\.\d+"
+regex = r"[\+-]?(?:\d*\.)?\d+"
 ```
 
 Compare with this:
