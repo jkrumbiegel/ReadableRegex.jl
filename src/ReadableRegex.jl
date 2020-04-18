@@ -16,7 +16,7 @@ export NOT_WORDBOUND
 export at_least_one
 export at_least
 export between
-export optional
+export maybe
 export any_number_of
 export matchonly
 export one_of
@@ -69,7 +69,7 @@ at_least_one(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "+"
 at_least(n::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$n,}"))
 between(low::Int, high::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$low,$high}"))
 
-optional(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "?"))
+maybe(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "?"))
 any_number_of(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "*"))
 followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?=$(by.s))")
 not_followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?!$(by.s))")
@@ -104,7 +104,7 @@ one_of(options::RegexString...) = RegexString((join([noncapturing_group_or_token
 at_least_one(x) = at_least_one(to_regexstring(x))
 at_least(n::Int, x) = at_least(n, to_regexstring(x))
 between(low::Int, high::Int, x) = between(low, high, to_regexstring(x))
-optional(x) = optional(to_regexstring(x))
+maybe(x) = maybe(to_regexstring(x))
 any_number_of(x) = any_number_of(to_regexstring(x))
 one_of(args...) = one_of(to_regexstring.(args)...)
 
