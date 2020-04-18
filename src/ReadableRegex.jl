@@ -1,5 +1,26 @@
 module ReadableRegex
 
+export RegexString
+export @rs_str
+export WORD
+export NOT_WORD
+export DIGIT
+export NOT_DIGIT
+export WHITESPACE
+export ANY_BUT_LINEBREAK
+export ANY
+export BEGIN
+export END
+export WORDBOUND
+export NOT_WORDBOUND
+export at_least_one
+export at_least
+export between
+export optional
+export any_number_of
+export matchonly
+export one_of
+
 struct RegexString
     s::String
 end
@@ -24,17 +45,19 @@ function noncapturing_group_or_token(s::String)
     end
 end
 
-WORD = rs"\w"
-NOT_WORD = rs"\W"
-DIGIT = rs"\d"
-NOT_DIGIT = rs"\D"
-WHITESPACE = rs"\s"
-ANY_BUT_LINEBREAK = rs"."
-ANY = rs"[\s\S]"
-BEGIN = rs"^"
-END = rs"$"
-WORDBOUND = rs"\b"
-NOT_WORDBOUND = rs"\B"
+const Optional{T} = Union{T, Nothing}
+
+const WORD = rs"\w"
+const NOT_WORD = rs"\W"
+const DIGIT = rs"\d"
+const NOT_DIGIT = rs"\D"
+const WHITESPACE = rs"\s"
+const ANY_BUT_LINEBREAK = rs"."
+const ANY = rs"[\s\S]"
+const BEGIN = rs"^"
+const END = rs"$"
+const WORDBOUND = rs"\b"
+const NOT_WORDBOUND = rs"\B"
 
 escaped(s::String) = replace(s, r"([\\\.\+\^\$])" => s"\\\1")
 
@@ -47,56 +70,74 @@ to_regexstring(sr::StepRange{Char, Int}) = RegexString("[$(sr.start)-$(sr.stop)]
 at_least_one(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "+"))
 at_least(n::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$n,}"))
 between(low::Int, high::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$low,$high}"))
+
 optional(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "?"))
 any_number_of(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "*"))
 followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?=$(by.s))")
 not_followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?!$(by.s))")
 preceded_by(r::RegexString, by::RegexString) = RegexString("(?<=$(by.s))" * noncapturing_group_or_token(r.s))
 not_preceded_by(r::RegexString, by::RegexString) = RegexString("(?<!$(by.s))" * noncapturing_group_or_token(r.s))
-one_of(rs::RegexString...) = RegexString((join([noncapturing_group_or_token(r.s) for r in rs], "|")))
+
+
+# function matchonly(r::RegexString;
+#         after::Optional{RegexString} = nothing,
+#         before::Optional{RegexString} = nothing,
+#         not_after::Optional{RegexString} = nothing,
+#         not_before::Optional{RegexString} = nothing)
+#
+#     if sum(isnothing.((after, before, not_after, not_before))) != 1
+#         error("This function takes exactly one keyword argument that is a RegexString")
+#     end
+#
+#     if !isnothing(after)
+#         preceded_by(r, after)
+#     elseif !isnothing(before)
+#         followed_by(r, before)
+#     elseif !isnothing(not_after)
+#         not_preceded_by(r, not_after)
+#     elseif !isnothing(not_before)
+#         not_followed_by(r, not_before)
+#     end
+# end
+
+function matchonly(r;
+        after = nothing,
+        before = nothing,
+        not_after = nothing,
+        not_before = nothing)
+
+    if sum((!isnothing).((after, before, not_after, not_before))) != 1
+        error("This function takes exactly one keyword argument that is a RegexString")
+    end
+
+    if !isnothing(after)
+        preceded_by(r, to_regexstring(after))
+    elseif !isnothing(before)
+        followed_by(r, to_regexstring(before))
+    elseif !isnothing(not_after)
+        not_preceded_by(r, to_regexstring(not_after))
+    elseif !isnothing(not_before)
+        not_followed_by(r, to_regexstring(not_before))
+    end
+end
+
+
+one_of(options::RegexString...) = RegexString((join([noncapturing_group_or_token(r.s) for r in options], "|")))
 
 at_least_one(x) = at_least_one(to_regexstring(x))
 at_least(n::Int, x) = at_least(n, to_regexstring(x))
 between(low::Int, high::Int, x) = between(low, high, to_regexstring(x))
 optional(x) = optional(to_regexstring(x))
 any_number_of(x) = any_number_of(to_regexstring(x))
-followed_by(x, by) = followed_by(to_regexstring(x), to_regexstring(by))
-not_followed_by(x, by) = not_followed_by(to_regexstring(x), to_regexstring(by))
-preceded_by(x, by) = preceded_by(to_regexstring(x), to_regexstring(by))
-not_preceded_by(x, by) = not_preceded_by(to_regexstring(x), to_regexstring(by))
 one_of(args...) = one_of(to_regexstring.(args)...)
 
 Base.:+(r1::RegexString, r2::RegexString) = RegexString(r1.s * r2.s)
 Base.:+(s::String, r::RegexString) = to_regexstring(s) + r
 Base.:+(r::RegexString, s::String) = r + to_regexstring(s)
 
-Regex(r::RegexString) = Regex(r.s)
 
-at_least_one("a") + optional("b") + at_least(2, "c")
-
-
-str = "Main Street 28"
-
-
+Base.Regex(r::RegexString) = Regex(r.s)
 Base.match(rs::RegexString, x) = Base.match(Regex(rs), x)
 Base.eachmatch(rs::RegexString, x) = Base.eachmatch(Regex(rs), x)
-match(BEGIN + at_least_one(WORD) + any_number_of(WHITESPACE + at_least_one(WORD)) + WHITESPACE + at_least_one(DIGIT) + END, str)
-
-match(BEGIN + at_least_one(ANY_BUT_LINEBREAK) + END, str)
-
-match(at_least_one(DIGIT), str)
-
-Regex(at_least_one(DIGIT))
-
-str = "a1 b2 c3 d e5"
-eachmatch(not_followed_by('a':'z', DIGIT), str) .|> println
-
-str = """
-    some code + more code
-    ## comment
-    some more code
-    """
-
-match(preceded_by(at_least_one(WORD), "##" + WHITESPACE), str)
 
 end # module
