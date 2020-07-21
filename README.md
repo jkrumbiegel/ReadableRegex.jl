@@ -19,7 +19,9 @@ regex = r"[\+-]?(?:\d*\.)?\d+"
 Compare with this:
 
 ```julia
-regex = maybe(one_out_of("-", "+")) * maybe(any_number_of(DIGIT) * ".") * at_least_one(DIGIT)
+regex = maybe(one_out_of("-", "+")) *
+            maybe(any_of(DIGIT) * ".") *
+            at_least_one(DIGIT)
 ```
 
 Both of these match all kinds of floating point numbers like these:
@@ -29,8 +31,7 @@ Both of these match all kinds of floating point numbers like these:
 But to understand the Regex you have to mentally parse it into the second version.
 Why not avoid that effort?
 
-ReadableRegex also saves you from escaping reserved regex characters like ".", so
-there are not so many backslashes everywhere.
+ReadableRegex also escapes reserved regex characters like "." by default, saving you a lot of backslashes.
 
 
 ## Constants
