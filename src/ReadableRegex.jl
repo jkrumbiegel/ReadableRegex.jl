@@ -71,11 +71,11 @@ const NOT_WORDBOUND = rs"\B"
 escaped(s::String) = replace(s, r"([\\\.\+\^\$])" => s"\\\1")
 
 # Define handy conversion routines for RegexStrings.
-to_regexstring(s::String) = RegexString(escaped(s))
-to_regexstring(rs::RegexString) = rs
-to_regexstring(c::Char) = RegexString(escaped(string(c)))
-to_regexstring(s::Set{Char}) = RegexString("[$(join(s))]")
-to_regexstring(sr::StepRange{Char, Int}) = RegexString("[$(sr.start)-$(sr.stop)]")
+Base.convert(::Type{RegexString}, s::String) = RegexString(escaped(s))
+Base.convert(::Type{RegexString}, rs::RegexString) = rs
+Base.convert(::Type{RegexString}, c::Char) = RegexString(escaped(string(c)))
+Base.convert(::Type{RegexString}, s::Set{Char}) = RegexString("[$(join(s))]")
+Base.convert(::Type{RegexString}, sr::StepRange{Char, Int}) = RegexString("[$(sr.start)-$(sr.stop)]")
 
 # These are functions that give the typical regex logic building blocks.
 at_least_one(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "+"))
@@ -101,32 +101,32 @@ function matchonly(r;
     end
 
     if !isnothing(after)
-        preceded_by(r, to_regexstring(after))
+        preceded_by(r, convert(RegexString, after))
     elseif !isnothing(before)
-        followed_by(r, to_regexstring(before))
+        followed_by(r, convert(RegexString, before))
     elseif !isnothing(not_after)
-        not_preceded_by(r, to_regexstring(not_after))
+        not_preceded_by(r, convert(RegexString, not_after))
     elseif !isnothing(not_before)
-        not_followed_by(r, to_regexstring(not_before))
+        not_followed_by(r, convert(RegexString, not_before))
     end
 end
 
 
 one_of(options::RegexString...) = RegexString((join([noncapturing_group_or_token(r.s) for r in options], "|")))
 
-at_least_one(x) = at_least_one(to_regexstring(x))
-at_least(n::Int, x) = at_least(n, to_regexstring(x))
-between(low::Int, high::Int, x) = between(low, high, to_regexstring(x))
-maybe(x) = maybe(to_regexstring(x))
-any_number_of(x) = any_number_of(to_regexstring(x))
-one_of(args...) = one_of(to_regexstring.(args)...)
+at_least_one(x) = at_least_one(convert(RegexString, x))
+at_least(n::Int, x) = at_least(n, convert(RegexString, x))
+between(low::Int, high::Int, x) = between(low, high, convert(RegexString, x))
+maybe(x) = maybe(convert(RegexString, x))
+any_number_of(x) = any_number_of(convert(RegexString, x))
+one_of(args...) = one_of(convert.(RegexString, args)...)
 
 
 # Define the multiplication operator on RegexStrings as concatenation like Strings.
 # Anything can be concatenated if it can be converted to a RegexString.
 Base.:*(r1::RegexString, r2::RegexString) = RegexString(r1.s * r2.s)
-Base.:*(s::String, r::RegexString) = to_regexstring(s) * r
-Base.:*(r::RegexString, s::String) = r * to_regexstring(s)
+Base.:*(anything, r::RegexString) = convert(RegexString, anything) * r
+Base.:*(r::RegexString, anything) = r * convert(RegexString, anything)
 
 
 Base.Regex(r::RegexString) = Regex(r.s)
