@@ -1,7 +1,5 @@
 # ReadableRegex
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://jkrumbiegel.github.io/ReadableRegex.jl/stable)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://jkrumbiegel.github.io/ReadableRegex.jl/dev)
 [![Build Status](https://travis-ci.com/jkrumbiegel/ReadableRegex.jl.svg?branch=master)](https://travis-ci.com/jkrumbiegel/ReadableRegex.jl)
 [![Codecov](https://codecov.io/gh/jkrumbiegel/ReadableRegex.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/jkrumbiegel/ReadableRegex.jl)
 
@@ -35,7 +33,7 @@ ReadableRegex also saves you from escaping reserved regex characters like ".", s
 there are not so many backslashes everywhere.
 
 
-# Constants
+## Constants
 
 These constants hold commonly used abbreviations:
 
@@ -53,15 +51,14 @@ These constants hold commonly used abbreviations:
 | WORDBOUND | \b |
 | NON_WORDBOUND | \B |
 
-# These functions access the typical regex building blocks
+## These functions access the typical regex building blocks
 
-```julia
-at_least_one(match)
-at_least(n, match)
-between(low, high, match)
-maybe(match)
-any_of(match)
-matchonly(match; [after, before, not_after, not_before])
-one_out_of(matches...)
-```
-
+| Function | Purpose |
+| --- | --- |
+| `at_least_one(match)` | Match one or more repetitions of `match`|
+| `at_least(n, match)` | Match at least `n` repetitions of `match`|
+| `between(low, high, match)` | Match between `low` and `high` repetitions of `match` |
+| `maybe(match)` | Match zero or one repetitions of `match` |
+| `any_of(match)` | Match zero to infinity repetitions of `match` |
+| `matchonly(match; [after, before, not_after, not_before])` | Match `match` only if it is either `before`, `after`, `not_after`, or `not_before` other matches.|
+| `one_out_of(matches...)` | Match one match out of all given `matches` (the first in order if multiple could match)|
