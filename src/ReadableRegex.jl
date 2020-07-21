@@ -56,16 +56,16 @@ end
 
 # Define helper constants.
 const WORD = rs"\w"
-const NOT_WORD = rs"\W"
+const NON_WORD = rs"\W"
 const DIGIT = rs"\d"
-const NOT_DIGIT = rs"\D"
+const NON_DIGIT = rs"\D"
 const WHITESPACE = rs"\s"
-const ANY_BUT_LINEBREAK = rs"."
+const NON_LINEBREAK = rs"."
 const ANY = rs"[\s\S]"
 const BEGIN = rs"^"
 const END = rs"$"
 const WORDBOUND = rs"\b"
-const NOT_WORDBOUND = rs"\B"
+const NON_WORDBOUND = rs"\B"
 
 # Convert a string with special regex chars to one where they are all escaped with backslashes.
 escaped(s::String) = replace(s, r"([\\\.\+\^\$])" => s"\\\1")
