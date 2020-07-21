@@ -18,6 +18,12 @@ using Test
     @test isnothing(match(r, str3))
     @test isnothing(match(r, str4))
     @test isnothing(match(r, str5))
+
+    str6 = "a, bb, ccc"
+    @test match(at_least(3, WORD), str6).match == "ccc"
+
+    str7 = "a, bbb, ccccc"
+    @test match(between(2, 4, WORD), str7).match == "bbb"
 end
 
 @testset "Lookarounds" begin
