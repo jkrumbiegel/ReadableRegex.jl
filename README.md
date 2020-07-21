@@ -33,6 +33,15 @@ Why not avoid that effort?
 
 ReadableRegex also escapes reserved regex characters like "." by default, saving you a lot of backslashes.
 
+## How does it work?
+
+ReadableRegex uses a simple intermediary type `RegexString` which holds a string
+representation of a regex, the same thing you'd normally write yourself.
+
+These `RegexString`s can be concatenated together with the `*` operator.
+You can convert them into a `Regex` by calling `Regex(rs::RegexString)`,
+or use them directly with `match` and `eachmatch`.
+
 
 ## Constants
 
@@ -69,7 +78,7 @@ These constants hold commonly used abbreviations:
 
 Some constructs from Base Julia are useful to express building blocks of regular expression.
 You can define `Base.convert(::Type{RegexString}, obj)` to use these directly in ReadableRegex expressions.
-All building block functions call `convert` on their inputs.
+All building block functions call `convert` on their inputs. 
 
 Some predefined examples:
 
