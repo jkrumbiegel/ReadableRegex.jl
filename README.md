@@ -8,15 +8,17 @@
 
 ReadableRegex.jl gives you a syntax that is much easier to write and understand
 than the rather cryptic standard Regex. The syntax is as close as possible to
-a natural language description of the Regex. Here's an example:
+a natural language description of the Regex.
+Especially for nested and grouped expressions with special characters it is orders of magnitudes easier to understand than
+a simple regex string. Here's an example:
 
-Quickly, what does this regex do?
+### Quickly, what does this regex do?
 
 ```julia
 regex = r"[\+-]?(?:\d*\.)?\d+"
 ```
 
-Compare with this:
+### Compare with this:
 
 ```julia
 regex = maybe(["-", "+"]) *
