@@ -75,8 +75,8 @@ escaped(s::String) = replace(s, r"([\\\.\+\^\$])" => s"\\\1")
 Base.convert(::Type{RegexString}, s::String) = RegexString(escaped(s))
 Base.convert(::Type{RegexString}, rs::RegexString) = rs
 Base.convert(::Type{RegexString}, c::Char) = RegexString(escaped(string(c)))
-Base.convert(::Type{RegexString}, s::Set{Char}) = RegexString("[$(join(s))]")
 Base.convert(::Type{RegexString}, sr::StepRange{Char, Int}) = RegexString("[$(sr.start)-$(sr.stop)]")
+Base.convert(::Type{RegexString}, list::Union{AbstractVector, Tuple}) = one_out_of(list...)
 
 # These are functions that give the typical regex logic building blocks.
 at_least_one(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "+"))

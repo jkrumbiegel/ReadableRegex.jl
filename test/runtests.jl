@@ -31,7 +31,7 @@ end
     str = "1 2.0 .3 -.4 -5 60 700 800.9 +9000"
 
     matches = eachmatch(
-        maybe(one_out_of("-", "+")) * maybe(any_of(DIGIT) * ".") * at_least_one(DIGIT),
+        maybe(["-", "+"]) * maybe(any_of(DIGIT) * ".") * at_least_one(DIGIT),
         str
     )
 

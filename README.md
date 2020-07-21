@@ -91,3 +91,4 @@ at_least_one('a':'z')
 between(1, 4, '🌑':'🌘')
 ```
 
+### `AbstractArray`
