@@ -21,7 +21,7 @@ regex = r"[\+-]?(?:\d*\.)?\d+"
 Compare with this:
 
 ```julia
-regex = maybe(one_of("-", "+")) + maybe(any_number_of(DIGIT) + ".") + at_least_one(DIGIT)
+regex = maybe(one_out_of("-", "+")) + maybe(any_number_of(DIGIT) + ".") + at_least_one(DIGIT)
 ```
 
 Both of these match all kinds of floating point numbers like these:
@@ -37,5 +37,31 @@ there are not so many backslashes everywhere.
 
 # Constants
 
+These constants hold commonly used abbreviations:
+
+| Constant | Regex |
+| -- | -- |
+| WORD | \w |
+| NON_WORD | \W |
+| DIGIT | \d |
+| NON_DIGIT | \D |
+| WHITESPACE | \s |
+| NON_LINEBREAK | . |
+| ANY | [\s\S] |
+| BEGIN | ^ |
+| END | $ |
+| WORDBOUND | \b |
+| NON_WORDBOUND | \B |
+
+# These functions access the typical regex building blocks
+
+```julia
+at_least_one(regex)
+at_least(n, regex)
+between(low, high, regex)
+maybe(regex)
+any_of(regex)
+matchonly(regex; [after, before, not_after, not_before])
+one_out_of(regexs...)
 
 
