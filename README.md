@@ -19,7 +19,7 @@ regex = r"[\+-]?(?:\d*\.)?\d+"
 Compare with this:
 
 ```julia
-regex = maybe(one_out_of("-", "+")) *
+regex = maybe(["-", "+"]) *
             maybe(any_of(DIGIT) * ".") *
             at_least_one(DIGIT)
 ```
@@ -73,9 +73,9 @@ All building block functions call `convert` on their inputs.
 
 Some predefined examples:
 
-### `String`
+### `String` and `Char`
 
-Strings are escaped when converted, so you can use `.+[]` etc. without escaping them manually.
+Strings and Chars are escaped when converted, so you can use `.+[]` etc. without escaping them manually.
 
 ```julia
 at_least_one("+")
@@ -91,4 +91,11 @@ at_least_one('a':'z')
 between(1, 4, '🌑':'🌘')
 ```
 
-### `AbstractArray`
+### `AbstractVector` and `Tuple`
+
+Using an AbstractVector or a Tuple is the same as calling `one_out_of(vec_or_tup...)`.
+
+```julia
+exactly(3, ['a':'z', "ha"])
+maybe(('x', 'Y'))
+```
