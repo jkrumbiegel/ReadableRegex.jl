@@ -33,3 +33,9 @@ Why not avoid that effort?
 
 ReadableRegex also saves you from escaping reserved regex characters like ".", so
 there are not so many backslashes everywhere.
+
+
+# Constants
+
+
+
