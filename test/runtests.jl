@@ -45,3 +45,14 @@ end
 
     @test matches == ["ab", "cd"]
 end
+
+@testset "Compile" begin
+    function matcher(str)
+        reg = @compile BEGIN * maybe('a':'z') * exactly(1, DIGIT) * END
+        match(reg, str)
+    end
+
+    @test !isnothing(matcher("a1"))
+    @test !isnothing(matcher("3"))
+    @test isnothing(matcher("2a"))
+end

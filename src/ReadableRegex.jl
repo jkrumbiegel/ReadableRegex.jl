@@ -21,6 +21,7 @@ export maybe
 export any_of
 export matchonly
 export one_out_of
+export @compile
 
 """
     RegexString(s::String)
@@ -136,5 +137,11 @@ Base.:*(r::RegexString, anything) = r * convert(RegexString, anything)
 Base.Regex(r::RegexString) = Regex(r.s)
 Base.match(rs::RegexString, x) = Base.match(Regex(rs), x)
 Base.eachmatch(rs::RegexString, x) = Base.eachmatch(Regex(rs), x)
+
+
+macro compile(exp)
+    regexstring = @eval $exp
+    Regex(regexstring.s)
+end
 
 end # module

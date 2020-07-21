@@ -111,3 +111,16 @@ That means you can use any element that is itself convertible to a `RegexString`
 exactly(3, ['a':'z', "ha"])
 maybe(('x', 'Y'))
 ```
+
+## Compilation
+
+You can use the `@compile` macro to build a finished `Regex` out of the following expression.
+This might help to avoid some runtime costs. You can only use literals and the ReadableRegex constants
+in these expressions.
+
+```julia
+function matcher(str)
+    regex = @compile BEGIN * maybe('a':'z') * exactly(1, DIGIT) * END
+    return match(regex, str)
+end
+```
