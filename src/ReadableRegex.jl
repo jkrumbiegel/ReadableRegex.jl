@@ -84,7 +84,7 @@ function matchonly(r;
         not_before = nothing)
 
     if sum((!isnothing).((after, before, not_after, not_before))) != 1
-        error("This function takes exactly one keyword argument that is a RegexString")
+        error("This function takes exactly one keyword argument that is not nothing.")
     end
 
     if !isnothing(after)
