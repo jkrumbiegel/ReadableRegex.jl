@@ -119,8 +119,9 @@ This might help to avoid some runtime costs. You can only use literals and the R
 in these expressions.
 
 ```julia
-function matcher(str)
-    regex = @compile BEGIN * maybe('a':'z') * exactly(1, DIGIT) * END
-    return match(regex, str)
-end
+julia> @allocated BEGIN * maybe('a':'z') * exactly(1, ["hello", "hi", "what's up"]) * END
+2528
+
+julia> @allocated @compile BEGIN * maybe('a':'z') * exactly(1, ["hello", "hi", "what's up"]) * END
+0
 ```
