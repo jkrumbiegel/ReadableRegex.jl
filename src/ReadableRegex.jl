@@ -19,7 +19,7 @@ export between
 export maybe
 export any_of
 export matchonly
-export one_of
+export one_out_of
 
 """
     RegexString(s::String)
@@ -112,14 +112,14 @@ function matchonly(r;
 end
 
 
-one_of(options::RegexString...) = RegexString((join([noncapturing_group_or_token(r.s) for r in options], "|")))
+one_out_of(options::RegexString...) = RegexString((join([noncapturing_group_or_token(r.s) for r in options], "|")))
 
 at_least_one(x) = at_least_one(convert(RegexString, x))
 at_least(n::Int, x) = at_least(n, convert(RegexString, x))
 between(low::Int, high::Int, x) = between(low, high, convert(RegexString, x))
 maybe(x) = maybe(convert(RegexString, x))
 any_of(x) = any_of(convert(RegexString, x))
-one_of(args...) = one_of(convert.(RegexString, args)...)
+one_out_of(args...) = one_out_of(convert.(RegexString, args)...)
 
 
 # Define the multiplication operator on RegexStrings as concatenation like Strings.
