@@ -56,12 +56,12 @@ These constants hold commonly used abbreviations:
 # These functions access the typical regex building blocks
 
 ```julia
-at_least_one(regex)
-at_least(n, regex)
-between(low, high, regex)
-maybe(regex)
-any_of(regex)
-matchonly(regex; [after, before, not_after, not_before])
-one_out_of(regexs...)
+at_least_one(match)
+at_least(n, match)
+between(low, high, match)
+maybe(match)
+any_of(match)
+matchonly(match; [after, before, not_after, not_before])
+one_out_of(matches...)
 ```
 
