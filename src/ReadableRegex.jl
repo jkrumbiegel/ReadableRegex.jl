@@ -108,9 +108,9 @@ maybe(x) = maybe(to_regexstring(x))
 any_number_of(x) = any_number_of(to_regexstring(x))
 one_of(args...) = one_of(to_regexstring.(args)...)
 
-Base.:+(r1::RegexString, r2::RegexString) = RegexString(r1.s * r2.s)
-Base.:+(s::String, r::RegexString) = to_regexstring(s) + r
-Base.:+(r::RegexString, s::String) = r + to_regexstring(s)
+Base.:*(r1::RegexString, r2::RegexString) = RegexString(r1.s * r2.s)
+Base.:*(s::String, r::RegexString) = to_regexstring(s) * r
+Base.:*(r::RegexString, s::String) = r * to_regexstring(s)
 
 
 Base.Regex(r::RegexString) = Regex(r.s)
