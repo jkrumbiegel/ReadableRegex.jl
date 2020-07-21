@@ -60,6 +60,7 @@ These constants hold commonly used abbreviations:
 | `at_least(n, target)` | Match at least `n` repetitions of `target`|
 | `between(low, high, target)` | Match between `low` and `high` repetitions of `target` |
 | `maybe(target)` | Match zero or one repetitions of `target` |
+| `exactly(n, target)` | Match exactly `n` repetitions of `target` |
 | `any_of(target)` | Match zero to infinity repetitions of `target` |
 | `matchonly(target; [after, before, not_after, not_before])` | Match `target` only if it is either `before`, `after`, `not_after`, or `not_before` other matches. Only one keyword can be set at a time. |
 | `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match)|
