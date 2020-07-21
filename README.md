@@ -39,26 +39,53 @@ These constants hold commonly used abbreviations:
 
 | Constant | Regex |
 | -- | -- |
-| WORD | \w |
-| NON_WORD | \W |
-| DIGIT | \d |
-| NON_DIGIT | \D |
-| WHITESPACE | \s |
-| NON_LINEBREAK | . |
-| ANY | [\s\S] |
-| BEGIN | ^ |
-| END | $ |
-| WORDBOUND | \b |
-| NON_WORDBOUND | \B |
+| `WORD` | `\w` |
+| `NON_WORD` | `\W` |
+| `DIGIT` | `\d` |
+| `NON_DIGIT` | `\D` |
+| `WHITESPACE` | `\s` |
+| `NON_LINEBREAK` | `.` |
+| `ANY` | `[\s\S]` |
+| `BEGIN` | `^` |
+| `END` | `$` |
+| `WORDBOUND` | `\b` |
+| `NON_WORDBOUND` | `\B` |
 
 ## These functions access the typical regex building blocks
 
 | Function | Purpose |
 | --- | --- |
-| `at_least_one(match)` | Match one or more repetitions of `match`|
-| `at_least(n, match)` | Match at least `n` repetitions of `match`|
-| `between(low, high, match)` | Match between `low` and `high` repetitions of `match` |
-| `maybe(match)` | Match zero or one repetitions of `match` |
-| `any_of(match)` | Match zero to infinity repetitions of `match` |
-| `matchonly(match; [after, before, not_after, not_before])` | Match `match` only if it is either `before`, `after`, `not_after`, or `not_before` other matches.|
-| `one_out_of(matches...)` | Match one match out of all given `matches` (the first in order if multiple could match)|
+| `at_least_one(target)` | Match one or more repetitions of `target`|
+| `at_least(n, target)` | Match at least `n` repetitions of `target`|
+| `between(low, high, target)` | Match between `low` and `high` repetitions of `target` |
+| `maybe(target)` | Match zero or one repetitions of `target` |
+| `any_of(target)` | Match zero to infinity repetitions of `target` |
+| `matchonly(target; [after, before, not_after, not_before])` | Match `target` only if it is either `before`, `after`, `not_after`, or `not_before` other matches. Only one keyword can be set at a time. |
+| `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match)|
+
+## Conversions
+
+Some constructs from Base Julia are useful to express building blocks of regular expression.
+You can define `Base.convert(::Type{RegexString}, obj)` to use these directly in ReadableRegex expressions.
+All building block functions call `convert` on their inputs.
+
+Some predefined examples:
+
+### `String`
+
+Strings are escaped when converted, so you can use `.+[]` etc. without escaping them manually.
+
+```julia
+at_least_one("+")
+maybe("[text in brackets]")
+```
+
+### `StepRange{Char, Int}`
+
+Char ranges can be used directly and match any char within the range.
+
+```julia
+at_least_one('a':'z')
+between(1, 4, '🌑':'🌘')
+```
+
