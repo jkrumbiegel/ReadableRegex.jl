@@ -79,18 +79,21 @@ Base.convert(::Type{RegexString}, c::Char) = RegexString(escaped(string(c)))
 Base.convert(::Type{RegexString}, sr::StepRange{Char, Int}) = RegexString("[$(sr.start)-$(sr.stop)]")
 Base.convert(::Type{RegexString}, list::Union{AbstractVector, Tuple}) = one_out_of(list...)
 
-# These are functions that give the typical regex logic building blocks.
-at_least_one(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "+"))
-at_least(n::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$n,}"))
-between(low::Int, high::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$low,$high}"))
-exactly(n::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$n}"))
 
-maybe(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "?"))
-any_of(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "*"))
-followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?=$(by.s))")
-not_followed_by(r::RegexString, by::RegexString) = RegexString(noncapturing_group_or_token(r.s) * "(?!$(by.s))")
-preceded_by(r::RegexString, by::RegexString) = RegexString("(?<=$(by.s))" * noncapturing_group_or_token(r.s))
-not_preceded_by(r::RegexString, by::RegexString) = RegexString("(?<!$(by.s))" * noncapturing_group_or_token(r.s))
+_c(x) = convert(RegexString, x)
+
+# These are functions that give the typical regex logic building blocks.
+at_least_one(r) = RegexString(noncapturing_group_or_append(_c(r).s, "+"))
+at_least(n::Int, r) = RegexString(noncapturing_group_or_append(_c(r).s, "{$n,}"))
+between(low::Int, high::Int, r) = RegexString(noncapturing_group_or_append(_c(r).s, "{$low,$high}"))
+exactly(n::Int, r) = RegexString(noncapturing_group_or_append(_c(r).s, "{$n}"))
+
+maybe(r) = RegexString(noncapturing_group_or_append(_c(r).s, "?"))
+any_of(r) = RegexString(noncapturing_group_or_append(_c(r).s, "*"))
+followed_by(r, by) = RegexString(noncapturing_group_or_token(_c(r).s) * "(?=$(_c(by).s))")
+not_followed_by(r, by) = RegexString(noncapturing_group_or_token(_c(r).s) * "(?!$(_c(by).s))")
+preceded_by(r, by) = RegexString("(?<=$(_c(by).s))" * noncapturing_group_or_token(_c(r).s))
+not_preceded_by(r, by) = RegexString("(?<!$(_c(by).s))" * noncapturing_group_or_token(_c(r).s))
 
 
 function matchonly(r;
@@ -104,27 +107,17 @@ function matchonly(r;
     end
 
     if !isnothing(after)
-        preceded_by(r, convert(RegexString, after))
+        preceded_by(r, after)
     elseif !isnothing(before)
-        followed_by(r, convert(RegexString, before))
+        followed_by(r, before)
     elseif !isnothing(not_after)
-        not_preceded_by(r, convert(RegexString, not_after))
+        not_preceded_by(r, not_after)
     elseif !isnothing(not_before)
-        not_followed_by(r, convert(RegexString, not_before))
+        not_followed_by(r, not_before)
     end
 end
 
-
-one_out_of(options::RegexString...) = RegexString((join([noncapturing_group_or_token(r.s) for r in options], "|")))
-
-at_least_one(x) = at_least_one(convert(RegexString, x))
-at_least(n::Int, x) = at_least(n, convert(RegexString, x))
-between(low::Int, high::Int, x) = between(low, high, convert(RegexString, x))
-exactly(n::Int, x) = exactly(n, convert(RegexString, x))
-
-maybe(x) = maybe(convert(RegexString, x))
-any_of(x) = any_of(convert(RegexString, x))
-one_out_of(args...) = one_out_of(convert.(RegexString, args)...)
+one_out_of(args...) = RegexString((join([noncapturing_group_or_token(_c(r).s) for r in args], "|")))
 
 
 # Define the multiplication operator on RegexStrings as concatenation like Strings.
