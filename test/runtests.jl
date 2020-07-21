@@ -9,9 +9,9 @@ using Test
     str4 = "Another Road 371a"
     str5 = "Another Road 371 "
 
-    r = BEGIN + at_least_one(WORD) +
-            any_number_of(WHITESPACE + at_least_one(WORD)) +
-            WHITESPACE + at_least_one(DIGIT) + END
+    r = BEGIN * at_least_one(WORD) *
+            any_number_of(WHITESPACE * at_least_one(WORD)) *
+            WHITESPACE * at_least_one(DIGIT) * END
 
     @test match(r, str1).match == str1
     @test match(r, str2).match == str2
@@ -31,7 +31,7 @@ end
     str = "1 2.0 .3 -.4 -5 60 700 800.9 +9000"
 
     matches = eachmatch(
-        maybe(one_of("-", "+")) + maybe(any_number_of(DIGIT) + ".") + at_least_one(DIGIT),
+        maybe(one_of("-", "+")) * maybe(any_number_of(DIGIT) * ".") * at_least_one(DIGIT),
         str
     )
 
