@@ -21,7 +21,7 @@ regex = r"[\+-]?(?:\d*\.)?\d+"
 Compare with this:
 
 ```julia
-regex = maybe(one_out_of("-", "+")) + maybe(any_number_of(DIGIT) + ".") + at_least_one(DIGIT)
+regex = maybe(one_out_of("-", "+")) * maybe(any_number_of(DIGIT) * ".") * at_least_one(DIGIT)
 ```
 
 Both of these match all kinds of floating point numbers like these:
