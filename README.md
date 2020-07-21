@@ -78,7 +78,7 @@ These constants hold commonly used abbreviations:
 
 Some constructs from Base Julia are useful to express building blocks of regular expression.
 You can define `Base.convert(::Type{RegexString}, obj)` to use these directly in ReadableRegex expressions.
-All building block functions call `convert` on their inputs. 
+All building block functions call `convert` on their inputs, and so does the multiplication operator `*`.
 
 Some predefined examples:
 
