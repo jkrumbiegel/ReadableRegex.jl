@@ -25,6 +25,12 @@ end
 
     @test match(matchonly(DIGIT, after = WORD), str).match == "3"
     @test match(matchonly(DIGIT, not_before = WORD), str).match == "2"
+
+    str2 = "123 for me, 456 for you"
+    @test match(matchonly(at_least_one(DIGIT) , before = " for me"), str2).match == "123"
+
+    str3 = "a2 3"
+    @test match(matchonly(DIGIT, not_after = WORD), str3).match == "3"
 end
 
 @testset "Numbers" begin
