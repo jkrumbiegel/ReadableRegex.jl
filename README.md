@@ -105,6 +105,7 @@ between(1, 4, '🌑':'🌘')
 ### `AbstractVector` and `Tuple`
 
 Using an AbstractVector or a Tuple is the same as calling `one_out_of(vec_or_tup...)`.
+That means you can use any element that is itself convertible to a `RegexString`.
 
 ```julia
 exactly(3, ['a':'z', "ha"])
