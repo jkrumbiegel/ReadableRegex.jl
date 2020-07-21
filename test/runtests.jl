@@ -10,7 +10,7 @@ using Test
     str5 = "Another Road 371 "
 
     r = BEGIN * at_least_one(WORD) *
-            any_number_of(WHITESPACE * at_least_one(WORD)) *
+            any_of(WHITESPACE * at_least_one(WORD)) *
             WHITESPACE * at_least_one(DIGIT) * END
 
     @test match(r, str1).match == str1
@@ -31,9 +31,17 @@ end
     str = "1 2.0 .3 -.4 -5 60 700 800.9 +9000"
 
     matches = eachmatch(
-        maybe(one_out_of("-", "+")) * maybe(any_number_of(DIGIT) * ".") * at_least_one(DIGIT),
+        maybe(one_out_of("-", "+")) * maybe(any_of(DIGIT) * ".") * at_least_one(DIGIT),
         str
     )
 
     @test all(split(str) .== (m.match for m in matches))
+end
+
+@testset "Range" begin
+    str = "ab cd ef gh"
+
+    matches = [m.match for m in eachmatch(exactly(2, 'a':'e'), str)]
+
+    @test matches == ["ab", "cd"]
 end

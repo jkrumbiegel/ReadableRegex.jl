@@ -16,6 +16,7 @@ export NON_WORDBOUND
 export at_least_one
 export at_least
 export between
+export exactly
 export maybe
 export any_of
 export matchonly
@@ -81,6 +82,7 @@ Base.convert(::Type{RegexString}, sr::StepRange{Char, Int}) = RegexString("[$(sr
 at_least_one(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "+"))
 at_least(n::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$n,}"))
 between(low::Int, high::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$low,$high}"))
+exactly(n::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$n}"))
 
 maybe(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "?"))
 any_of(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "*"))
@@ -117,6 +119,8 @@ one_out_of(options::RegexString...) = RegexString((join([noncapturing_group_or_t
 at_least_one(x) = at_least_one(convert(RegexString, x))
 at_least(n::Int, x) = at_least(n, convert(RegexString, x))
 between(low::Int, high::Int, x) = between(low, high, convert(RegexString, x))
+exactly(n::Int, x) = exactly(n, convert(RegexString, x))
+
 maybe(x) = maybe(convert(RegexString, x))
 any_of(x) = any_of(convert(RegexString, x))
 one_out_of(args...) = one_out_of(convert.(RegexString, args)...)
