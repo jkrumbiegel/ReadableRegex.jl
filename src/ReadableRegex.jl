@@ -21,6 +21,13 @@ export any_number_of
 export matchonly
 export one_of
 
+"""
+    RegexString(s::String)
+
+Holds a string meant as the raw format of a regular expression.
+This should always be convertible to a valid regex, so it's best
+not to construct one yourself. Use the builder functions instead.
+"""
 struct RegexString
     s::String
 end
@@ -37,6 +44,8 @@ function noncapturing_group_or_append(inner::String, outer::String)
     end
 end
 
+# This helps keeping the nesting code simple,
+# because there can be no interactions beyond the group barrier.
 function noncapturing_group_or_token(s::String)
     if length(s) == 1
         s
@@ -45,6 +54,7 @@ function noncapturing_group_or_token(s::String)
     end
 end
 
+# Define helper constants.
 const WORD = rs"\w"
 const NOT_WORD = rs"\W"
 const DIGIT = rs"\d"
@@ -57,14 +67,17 @@ const END = rs"$"
 const WORDBOUND = rs"\b"
 const NOT_WORDBOUND = rs"\B"
 
+# Convert a string with special regex chars to one where they are all escaped with backslashes.
 escaped(s::String) = replace(s, r"([\\\.\+\^\$])" => s"\\\1")
 
+# Define handy conversion routines for RegexStrings.
 to_regexstring(s::String) = RegexString(escaped(s))
 to_regexstring(rs::RegexString) = rs
 to_regexstring(c::Char) = RegexString(escaped(string(c)))
 to_regexstring(s::Set{Char}) = RegexString("[$(join(s))]")
 to_regexstring(sr::StepRange{Char, Int}) = RegexString("[$(sr.start)-$(sr.stop)]")
 
+# These are functions that give the typical regex logic building blocks.
 at_least_one(r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "+"))
 at_least(n::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$n,}"))
 between(low::Int, high::Int, r::RegexString) = RegexString(noncapturing_group_or_append(r.s, "{$low,$high}"))
@@ -108,6 +121,9 @@ maybe(x) = maybe(to_regexstring(x))
 any_number_of(x) = any_number_of(to_regexstring(x))
 one_of(args...) = one_of(to_regexstring.(args)...)
 
+
+# Define the multiplication operator on RegexStrings as concatenation like Strings.
+# Anything can be concatenated if it can be converted to a RegexString.
 Base.:*(r1::RegexString, r2::RegexString) = RegexString(r1.s * r2.s)
 Base.:*(s::String, r::RegexString) = to_regexstring(s) * r
 Base.:*(r::RegexString, s::String) = r * to_regexstring(s)
