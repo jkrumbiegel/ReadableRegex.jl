@@ -74,7 +74,12 @@ These constants hold commonly used abbreviations:
 | `exactly(n, target)` | Match exactly `n` repetitions of `target` |
 | `any_of(target)` | Match zero to infinity repetitions of `target` |
 | `matchonly(target; [after, before, not_after, not_before])` | Match `target` only if it is either `before`, `after`, `not_after`, or `not_before` other matches. Only one keyword can be set at a time. |
-| `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match)|
+| `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match). |
+| `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
+| `reference(i::Int)` | Back reference to capture group number `i` (1 based counting) |
+| `reference(name)` | Back reference to the capture group named `name` |
+| `chars(s::String)` | Match any one of the characters in string `s` |
+
 
 ## Conversions
 
@@ -86,7 +91,7 @@ Some predefined examples:
 
 ### `String` and `Char`
 
-Strings and Chars are escaped when converted, so you can use `.+[]` etc. without escaping them manually.
+Strings and Chars are escaped when converted, so you can use `.+[]^$` etc. without escaping them manually.
 
 ```julia
 at_least_one("+")
