@@ -80,6 +80,25 @@ These constants hold commonly used abbreviations:
 | `reference(name)` | Back reference to the capture group named `name` |
 | `chars(s::String)` | Match any one of the characters in string `s` |
 
+## Creating RegexStrings manually
+
+If you need to, you can create a `RegexString` using its constructor with a properly escaped string.
+
+```julia
+r = RegexString("\\w")
+```
+
+Alternatively, there is the `@rs_str` macro which allows you to use normal regex syntax, without special escaping rules.
+
+```julia
+r = rs"\w"
+```
+
+This can also be useful if you want to start a chain of concatenated parts where the multiplication operator needs one of the two first elements to be a `RegexString`.
+
+```julia
+r = rs"c" * ["at", "ool", "ute"]
+```
 
 ## Conversions
 
