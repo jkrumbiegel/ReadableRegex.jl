@@ -77,3 +77,9 @@ end
     reg2 = "p" * capture(chars("aeiou"), as = "vowel") * "st" * reference("vowel")
     @test match(reg, str).match == "pasta"
 end
+
+@testset "Unicode categories" begin
+    str = "how is Jim doing?"
+    @test match(UPPERCASE, str).match == "J"
+    @test match(PUNCTUATION, str).match == "?"
+end
