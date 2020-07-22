@@ -45,25 +45,7 @@ You can convert them into a `Regex` by calling `Regex(rs::RegexString)`,
 or use them directly with `match` and `eachmatch`.
 
 
-## Constants
-
-These constants hold commonly used abbreviations:
-
-| Constant | Regex |
-| -- | -- |
-| `WORD` | `\w` |
-| `NON_WORD` | `\W` |
-| `DIGIT` | `\d` |
-| `NON_DIGIT` | `\D` |
-| `WHITESPACE` | `\s` |
-| `NON_LINEBREAK` | `.` |
-| `ANY` | `[\s\S]` |
-| `BEGIN` | `^` |
-| `END` | `$` |
-| `WORDBOUND` | `\b` |
-| `NON_WORDBOUND` | `\B` |
-
-## These functions access the typical regex building blocks
+## Regex building blocks
 
 | Function | Purpose |
 | --- | --- |
@@ -149,3 +131,70 @@ julia> @allocated BEGIN * maybe('a':'z') * exactly(1, ["hello", "hi", "what's up
 julia> @allocated @compile BEGIN * maybe('a':'z') * exactly(1, ["hello", "hi", "what's up"]) * END
 0
 ```
+
+## Constants
+
+These constants reference commonly used character classes:
+
+| Constant | Regex |
+| -- | -- |
+| `WORD` | `\w` |
+| `NON_WORD` | `\W` |
+| `DIGIT` | `\d` |
+| `NON_DIGIT` | `\D` |
+| `WHITESPACE` | `\s` |
+| `NON_LINEBREAK` | `.` |
+| `ANY` | `[\s\S]` |
+| `BEGIN` | `^` |
+| `END` | `$` |
+| `WORDBOUND` | `\b` |
+| `NON_WORDBOUND` | `\B` |
+
+These constants access unicode categories. __For brevity, the negated variants are not listed__. They all start with `NON_`, like `NON_LETTER`, `NON_PUNCTUATION`, etc.
+
+| Unicode Constant | Regex |
+| -- | -- |
+| Letters | |
+| `LETTER` | `\p{L}` |
+| `UPPERCASE` | `\p{Lu}` |
+| `LOWERCASE` | `\p{Ll}` |
+| `TITLECASE` | `\p{Lt}` |
+| `MODIFIER_LETTER` | `\p{Lm}` |
+| `OTHER_LETTER` | `\p{Lo}` |
+| Marks | |
+| `MARK` | `\p{M}` |
+| `NONSPACING_MARK` | `\p{Mn}` |
+| `SPACING_COMBINING_MARK` | `\p{Mc}` |
+| `ENCLOSING_MARK` | `\p{Me}` |
+| Numbers | |
+| `NUMBER` | `\p{N}` |
+| `DEC_DIGIT_NUMBER` | `\p{Nd}` |
+| `LETTER_NUMBER` | `\p{Nl}` |
+| `OTHER_NUMBER` | `\p{No}` |
+| Symbols | |
+| `SYMBOL` | `\p{S}` |
+| `MATH_SYMBOL` | `\p{Sm}` |
+| `CURRENCY` | `\p{Sc}` |
+| `MODIFIER_SYMBOL` | `\p{Sk}` |
+| `OTHER_SYMBOL` | `\p{So}` |
+| Punctuation | |
+| `PUNCTUATION` | `\p{P}` |
+| `CONNECTOR_PUNCT` | `\p{Pc}` |
+| `DASH_PUNCT` | `\p{Pd}` |
+| `OPEN_PUNCT` | `\p{Ps}` |
+| `CLOSE_PUNCT` | `\p{Pe}` |
+| `INITIAL_PUNCT` | `\p{Pi}` |
+| `FINAL_PUNCT` | `\p{Pf}` |
+| `OTHER_PUNCT` | `\p{Po}` |
+| Separators | |
+| `SEPARATOR` | `\p{Z}` |
+| `SPACE_SEP` | `\p{Zs}` |
+| `LINE_SEP` | `\p{Zl}` |
+| `PARAGRAPH_SEP` | `\p{Zp}` |
+| Other | |
+| `OTHER` | `\p{C}` |
+| `CONTROL` | `\p{Cc}` |
+| `FORMAT` | `\p{Cf}` |
+| `SURROGATE` | `\p{Cs}` |
+| `PRIVATE_USE` | `\p{Co}` |
+| `UNASSIGNED` | `\p{Cn}` |
