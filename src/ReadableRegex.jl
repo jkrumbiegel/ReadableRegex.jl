@@ -130,7 +130,7 @@ function capture(r; as = nothing)
     end
 end
 
-reference(i::Int) = RegexString("\\$n")
+reference(i::Int) = RegexString("\\$i")
 reference(name) = RegexString("\\k<$name>")
 
 chars(s::String) = RegexString("[$s]")
