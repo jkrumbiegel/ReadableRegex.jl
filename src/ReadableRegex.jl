@@ -271,7 +271,7 @@ function matchonly(r;
     end
 end
 
-one_out_of(args...) = RegexString((join([noncapturing_group_or_token(_c(r).s) for r in args], "|")))
+one_out_of(args...) = RegexString(noncapturing_group_or_token(join([noncapturing_group_or_token(_c(r).s) for r in args], "|")))
 
 function capture(r; as = nothing)
     if isnothing(as)
