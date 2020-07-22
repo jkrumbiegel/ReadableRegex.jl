@@ -21,6 +21,9 @@ export maybe
 export any_of
 export matchonly
 export one_out_of
+export capture
+export reference
+export chars
 export @compile
 
 """
@@ -119,6 +122,18 @@ end
 
 one_out_of(args...) = RegexString((join([noncapturing_group_or_token(_c(r).s) for r in args], "|")))
 
+function capture(r; as = nothing)
+    if isnothing(as)
+        RegexString("($(_c(r).s))")
+    else
+        RegexString("(?<$as>$(_c(r).s))")
+    end
+end
+
+reference(n::Int) = RegexString("\\$n")
+reference(name) = RegexString("\\k<$name>")
+
+chars(s::String) = RegexString("[$s]")
 
 # Define the multiplication operator on RegexStrings as concatenation like Strings.
 # Anything can be concatenated if it can be converted to a RegexString.

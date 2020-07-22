@@ -68,3 +68,12 @@ end
     @test !isnothing(matcher("3"))
     @test isnothing(matcher("2a"))
 end
+
+@testset "Capture and Reference" begin
+    str = "pasta pesto"
+    reg = "p" * capture(chars("aeiou")) * "st" * reference(1)
+    @test match(reg, str).match == "pasta"
+
+    reg2 = "p" * capture(chars("aeiou"), as = "vowel") * "st" * reference("vowel")
+    @test match(reg, str).match == "pasta"
+end
