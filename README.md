@@ -10,7 +10,9 @@ ReadableRegex.jl gives you a syntax that is much easier to write and understand
 than the rather cryptic standard Regex. The syntax is as close as possible to
 a natural language description of the Regex.
 Especially for nested and grouped expressions with special characters it is orders of magnitudes easier to understand than
-a simple regex string. Here's an example:
+a simple regex string. You can also compile the function expression before using it with the `@compile` macro for lower runtime costs.
+
+Here's an example:
 
 ### Quickly, what does this regex do?
 
@@ -60,7 +62,8 @@ or use them directly with `match` and `eachmatch`.
 | `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
 | `reference(i::Int)` | Back reference to capture group number `i` (1 based counting) |
 | `reference(name)` | Back reference to the capture group named `name` |
-| `chars(s::String)` | Match any one of the characters in string `s` |
+| `chars(args...)` | Match any character in the set given by the arguments. A string like `"abc"` matches each of its characters, in this case a, b or c. It can also be a range like `'a':'z'`, or a category constant like `WHITESPACE` or `UPPERCASE`. |
+| `not_chars(args...)` | Match any character not in the set given by the arguments. Arguments can be the same as in `chars(args...)`. |
 
 ## Creating RegexStrings manually
 

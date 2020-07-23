@@ -83,3 +83,16 @@ end
     @test match(UPPERCASE, str).match == "J"
     @test match(PUNCTUATION, str).match == "?"
 end
+
+@testset "multiarg chars" begin
+    str = "hakuna matata"
+
+    reg = at_least(2, chars("mat"))
+    @test match(reg, str).match == "matata"
+
+    reg2 = at_least_one(chars('h':'n', 'a', 'u'))
+    @test match(reg2, str).match == "hakuna"
+
+    reg3 = at_least(2, not_chars(WHITESPACE, 'a'))
+    @test match(reg3, str).match == "kun"
+end

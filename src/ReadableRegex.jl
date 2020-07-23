@@ -24,6 +24,7 @@ export one_out_of
 export capture
 export reference
 export chars
+export not_chars
 export @compile
 
 export LETTER
@@ -284,7 +285,13 @@ end
 reference(i::Int) = RegexString("\\$i")
 reference(name) = RegexString("\\k<$name>")
 
-chars(s::String) = RegexString("[$s]")
+chars(args...) =     RegexString("""[$(join((_charset(arg) for arg in args), ""))]""")
+not_chars(args...) = RegexString("""[^$(join((_charset(arg) for arg in args), ""))]""")
+
+_charset(s::String) = s
+_charset(c::Char) = c
+_charset(sr::StepRange{Char, Int}) = "$(sr.start)-$(sr.stop)"
+_charset(rs::RegexString) = rs.s
 
 # Define the multiplication operator on RegexStrings as concatenation like Strings.
 # Anything can be concatenated if it can be converted to a RegexString.
