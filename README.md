@@ -46,6 +46,28 @@ These `RegexString`s can be concatenated together with the `*` operator.
 You can convert them into a `Regex` by calling `Regex(rs::RegexString)`,
 or use them directly with `match` and `eachmatch`.
 
+Let's say we wanted to extract all the possible integers from the list above. One way could be this:
+
+```julia
+julia> reg = matchonly(
+                matchonly(
+                    maybe(chars("+-")) * at_least_one(DIGIT),
+                    not_after = "."),
+                not_before = NON_SEPARATOR)
+
+RegexString("(?:(?<!\\.)(?:(?:[+-])?(?:\\d)+))(?!\\P{Z})")
+# you do not want to read or write that...
+
+julia> eachmatch(reg, "1 2.0 .3 -.4 -5 60 700 800.9 +9000") .|> println;
+
+RegexMatch("1")
+RegexMatch("-5") 
+RegexMatch("60") 
+RegexMatch("700")
+RegexMatch("+9000")
+```
+
+Note that the regex string representation is currently not the most sparse, as non-capturing groups are used more freely than strictly needed to keep the logic simple. This should not affect performance, though.
 
 ## Regex building blocks
 
