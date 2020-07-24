@@ -51,7 +51,7 @@ Let's say we wanted to extract all the possible integers from the list above. On
 ```julia
 julia> reg = look_for(
                 look_for(
-                    maybe(chars("+-")) * one_or_more(DIGIT),
+                    maybe(char_in("+-")) * one_or_more(DIGIT),
                     not_after = "."),
                 not_before = NON_SEPARATOR)
 
@@ -84,8 +84,8 @@ Note that the regex string representation is currently not the most sparse, as n
 | `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
 | `reference(i::Int)` | Back reference to capture group number `i` (1 based counting) |
 | `reference(name)` | Back reference to the capture group named `name` |
-| `chars(args...)` | Match any character in the set given by the arguments. A string like `"abc"` matches each of its characters, in this case a, b or c. It can also be a range like `'a':'z'`, or a category constant like `WHITESPACE` or `UPPERCASE`. |
-| `not_chars(args...)` | Match any character not in the set given by the arguments. Arguments can be the same as in `chars(args...)`. |
+| `char_in(args...)` | Match any character in the set given by the arguments. A string like `"abc"` matches each of its characters, in this case a, b or c. It can also be a range like `'a':'z'`, or a category constant like `WHITESPACE` or `UPPERCASE`. |
+| `char_not_in(args...)` | Match any character not in the set given by the arguments. Arguments can be the same as in `char_in(args...)`. |
 
 ## Creating RegexStrings manually
 
@@ -117,7 +117,7 @@ Some predefined examples:
 
 ### `String` and `Char`
 
-Strings and Chars are escaped when converted, so you can use `.+[]^$` etc. without escaping them manually.
+Strings and char_in are escaped when converted, so you can use `.+[]^$` etc. without escaping them manually.
 
 ```julia
 one_or_more("+")

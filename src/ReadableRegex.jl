@@ -23,8 +23,8 @@ export look_for
 export one_out_of
 export capture
 export reference
-export chars
-export not_chars
+export char_in
+export char_not_in
 export @compile
 
 export LETTER
@@ -224,7 +224,7 @@ const NON_SURROGATE = rs"\P{Cs}"
 const NON_PRIVATE_USE = rs"\P{Co}"
 const NON_UNASSIGNED = rs"\P{Cn}"
 
-# Convert a string with special regex chars to one where they are all escaped with backslashes.
+# Convert a string with special regex char_in to one where they are all escaped with backslashes.
 escaped(s::String) = replace(s, r"([\\\.\+\-\^\$\\|\?\*[\]\(\)\{\}])" => s"\\\1")
 
 # Define handy conversion routines for RegexStrings.
@@ -286,13 +286,13 @@ end
 reference(i::Int) = RegexString("\\$i")
 reference(name) = RegexString("\\k<$name>")
 
-chars(args...) =     RegexString("""[$(join((_charset(arg) for arg in args), ""))]""")
-not_chars(args...) = RegexString("""[^$(join((_charset(arg) for arg in args), ""))]""")
+char_in(args...) =     RegexString("""[$(join((_char_inet(arg) for arg in args), ""))]""")
+char_not_in(args...) = RegexString("""[^$(join((_char_inet(arg) for arg in args), ""))]""")
 
-_charset(s::String) = s
-_charset(c::Char) = c
-_charset(sr::StepRange{Char, Int}) = "$(sr.start)-$(sr.stop)"
-_charset(rs::RegexString) = rs.s
+_char_inet(s::String) = s
+_char_inet(c::Char) = c
+_char_inet(sr::StepRange{Char, Int}) = "$(sr.start)-$(sr.stop)"
+_char_inet(rs::RegexString) = rs.s
 
 # Define the multiplication operator on RegexStrings as concatenation like Strings.
 # Anything can be concatenated if it can be converted to a RegexString.

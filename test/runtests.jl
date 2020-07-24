@@ -41,7 +41,7 @@ end
     str4 = "1 2.0 .3 -.4 -5 60 700 800.9 +9000"
 
     reg = look_for(
-            maybe(chars("+-")) * one_or_more(DIGIT),
+            maybe(char_in("+-")) * one_or_more(DIGIT),
             not_after = ".",
             not_before = NON_SEPARATOR)
 
@@ -80,10 +80,10 @@ end
 
 @testset "Capture and Reference" begin
     str = "pasta pesto"
-    reg = "p" * capture(chars("aeiou")) * "st" * reference(1)
+    reg = "p" * capture(char_in("aeiou")) * "st" * reference(1)
     @test match(reg, str).match == "pasta"
 
-    reg2 = "p" * capture(chars("aeiou"), as = "vowel") * "st" * reference("vowel")
+    reg2 = "p" * capture(char_in("aeiou"), as = "vowel") * "st" * reference("vowel")
     @test match(reg, str).match == "pasta"
 end
 
@@ -93,15 +93,15 @@ end
     @test match(PUNCTUATION, str).match == "?"
 end
 
-@testset "multiarg chars" begin
+@testset "multiarg char_in" begin
     str = "hakuna matata"
 
-    reg = at_least(2, chars("mat"))
+    reg = at_least(2, char_in("mat"))
     @test match(reg, str).match == "matata"
 
-    reg2 = one_or_more(chars('h':'n', 'a', 'u'))
+    reg2 = one_or_more(char_in('h':'n', 'a', 'u'))
     @test match(reg2, str).match == "hakuna"
 
-    reg3 = at_least(2, not_chars(WHITESPACE, 'a'))
+    reg3 = at_least(2, char_not_in(WHITESPACE, 'a'))
     @test match(reg3, str).match == "kun"
 end
