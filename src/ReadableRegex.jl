@@ -231,7 +231,7 @@ escaped(s::String) = replace(s, r"([\\\.\+\-\^\$\\|\?\*[\]\(\)\{\}])" => s"\\\1"
 Base.convert(::Type{RegexString}, s::String) = RegexString(escaped(s))
 Base.convert(::Type{RegexString}, rs::RegexString) = rs
 Base.convert(::Type{RegexString}, c::Char) = RegexString(escaped(string(c)))
-Base.convert(::Type{RegexString}, sr::StepRange{Char, Int}) = RegexString("[$(sr.start)-$(sr.stop)]")
+Base.convert(::Type{RegexString}, sr::StepRange{Char, Int}) = RegexString("[$(escaped(string(sr.start)))-$(escaped(string(sr.stop)))]")
 Base.convert(::Type{RegexString}, list::Union{AbstractVector, Tuple}) = one_out_of(list...)
 
 
