@@ -286,13 +286,16 @@ end
 reference(i::Int) = RegexString("\\$i")
 reference(name) = RegexString("\\k<$name>")
 
-char_in(args...) =     RegexString("""[$(join((_char_inet(arg) for arg in args), ""))]""")
-char_not_in(args...) = RegexString("""[^$(join((_char_inet(arg) for arg in args), ""))]""")
+char_in(args...) =     RegexString("""[$(join((_charset(arg) for arg in args), ""))]""")
+char_not_in(args...) = RegexString("""[^$(join((_charset(arg) for arg in args), ""))]""")
 
-_char_inet(s::String) = s
-_char_inet(c::Char) = c
-_char_inet(sr::StepRange{Char, Int}) = "$(sr.start)-$(sr.stop)"
-_char_inet(rs::RegexString) = rs.s
+# allowed characters are different within a set, only \ - ^ and ] have to be escaped
+_escape_for_set(s::String) = replace(s, r"([\\\-\^\]])" => s"\\\1")
+
+_charset(s::String) = _escape_for_set(s)
+_charset(c::Char) = c
+_charset(sr::StepRange{Char, Int}) = "$(_escape_for_set(string(sr.start)))-$(_escape_for_set(string(sr.stop)))"
+_charset(rs::RegexString) = rs.s
 
 # Define the multiplication operator on RegexStrings as concatenation like Strings.
 # Anything can be concatenated if it can be converted to a RegexString.
