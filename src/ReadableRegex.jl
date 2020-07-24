@@ -225,7 +225,7 @@ const NON_PRIVATE_USE = rs"\P{Co}"
 const NON_UNASSIGNED = rs"\P{Cn}"
 
 # Convert a string with special regex chars to one where they are all escaped with backslashes.
-escaped(s::String) = replace(s, r"([\\\.\+\^\$])" => s"\\\1")
+escaped(s::String) = replace(s, r"([\\\.\+\-\^\$\\|\?\*[\]\(\)\{\}])" => s"\\\1")
 
 # Define handy conversion routines for RegexStrings.
 Base.convert(::Type{RegexString}, s::String) = RegexString(escaped(s))
