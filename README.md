@@ -79,7 +79,7 @@ Note that the regex string representation is currently not the most sparse, as n
 | `maybe(target)` | Match zero or one repetitions of `target` |
 | `exactly(n, target)` | Match exactly `n` repetitions of `target` |
 | `zero_or_more(target)` | Match zero to infinity repetitions of `target` |
-| `look_for(target; [after, before, not_after, not_before])` | Match `target` only if it is either `before`, `after`, `not_after`, or `not_before` other matches. Only one keyword can be set at a time. |
+| `look_for(target; [after, before, not_after, not_before])` | Match `target` only if it is `before`, `after`, `not_after`, or `not_before` other matches. You can set multiple keywords at once. |
 | `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match). |
 | `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
 | `reference(i::Int)` | Back reference to capture group number `i` (1 based counting) |
