@@ -167,6 +167,7 @@ These constants reference commonly used character classes:
 | `DIGIT` | `\d` |
 | `NON_DIGIT` | `\D` |
 | `WHITESPACE` | `\s` |
+| `NON_WHITESPACE` | `\S` |
 | `NON_LINEBREAK` | `.` |
 | `ANY` | `[\s\S]` |
 | `BEGIN` | `^` |

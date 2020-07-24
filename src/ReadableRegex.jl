@@ -7,6 +7,7 @@ export NON_WORD
 export DIGIT
 export NON_DIGIT
 export WHITESPACE
+export NON_WHITESPACE
 export NON_LINEBREAK
 export ANY
 export BEGIN
@@ -141,6 +142,7 @@ const NON_WORD = rs"\W"
 const DIGIT = rs"\d"
 const NON_DIGIT = rs"\D"
 const WHITESPACE = rs"\s"
+const NON_WHITESPACE = rs"\S"
 const NON_LINEBREAK = rs"."
 const ANY = rs"[\s\S]"
 const BEGIN = rs"^"
