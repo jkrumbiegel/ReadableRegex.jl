@@ -49,13 +49,12 @@ or use them directly with `match` and `eachmatch`.
 Let's say we wanted to extract all the possible integers from the list above. One way could be this:
 
 ```julia
-julia> reg = look_for(
-                look_for(
-                    maybe(char_in("+-")) * one_or_more(DIGIT),
-                    not_after = "."),
+julia> reg = @compile look_for(
+                maybe(char_in("+-")) * one_or_more(DIGIT),
+                not_after = ".",
                 not_before = NON_SEPARATOR)
 
-RegexString("(?:(?<!\\.)(?:(?:[+-])?(?:\\d)+))(?!\\P{Z})")
+r"(?:(?<!\.)(?:(?:[+\-])?(?:\d)+))(?!\P{Z})"
 # you do not want to read or write that...
 
 julia> eachmatch(reg, "1 2.0 .3 -.4 -5 60 700 800.9 +9000") .|> println;
