@@ -257,19 +257,20 @@ function look_for(r;
         not_after = nothing,
         not_before = nothing)
 
-    if sum((!isnothing).((after, before, not_after, not_before))) != 1
-        error("This function takes exactly one keyword argument that is not nothing.")
-    end
-
+    current = r
     if !isnothing(after)
-        preceded_by(r, after)
-    elseif !isnothing(before)
-        followed_by(r, before)
-    elseif !isnothing(not_after)
-        not_preceded_by(r, not_after)
-    elseif !isnothing(not_before)
-        not_followed_by(r, not_before)
+        current = preceded_by(current, after)
     end
+    if !isnothing(before)
+        current = followed_by(current, before)
+    end
+    if !isnothing(not_after)
+        current = not_preceded_by(current, not_after)
+    end
+    if !isnothing(not_before)
+        current = not_followed_by(current, not_before)
+    end
+    current
 end
 
 one_out_of(args...) = RegexString(noncapturing_group_or_token(join([noncapturing_group_or_token(_c(r).s) for r in args], "|")))

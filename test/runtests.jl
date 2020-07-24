@@ -37,6 +37,15 @@ end
 
     str3 = "a2 3"
     @test match(look_for(DIGIT, not_after = WORD), str3).match == "3"
+
+    str4 = "1 2.0 .3 -.4 -5 60 700 800.9 +9000"
+
+    reg = look_for(
+            maybe(chars("+-")) * one_or_more(DIGIT),
+            not_after = ".",
+            not_before = NON_SEPARATOR)
+
+    @test collect(m.match for m in eachmatch(reg, str4)) == ["1", "-5", "60", "700", "+9000"]      
 end
 
 @testset "Numbers" begin
