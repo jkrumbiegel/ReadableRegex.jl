@@ -66,7 +66,7 @@ RegexMatch("700")
 RegexMatch("+9000")
 ```
 
-Note that the regex string representation is currently not the most sparse, as non-capturing groups are used more freely than strictly needed to keep the logic simple. This should not affect performance, though.
+Note that the regex string representation is currently not as parsimonious as possible, as non-capturing groups are used more freely than strictly needed to keep the logic simple. This should not affect performance, though.
 
 ## Regex building blocks
 
