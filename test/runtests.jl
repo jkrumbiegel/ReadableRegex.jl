@@ -29,14 +29,14 @@ end
 @testset "Lookarounds" begin
     str = "1a 2 b3 c4d"
 
-    @test match(matchonly(DIGIT, after = WORD), str).match == "3"
-    @test match(matchonly(DIGIT, not_before = WORD), str).match == "2"
+    @test match(look_for(DIGIT, after = WORD), str).match == "3"
+    @test match(look_for(DIGIT, not_before = WORD), str).match == "2"
 
     str2 = "123 for me, 456 for you"
-    @test match(matchonly(one_or_more(DIGIT) , before = " for me"), str2).match == "123"
+    @test match(look_for(one_or_more(DIGIT) , before = " for me"), str2).match == "123"
 
     str3 = "a2 3"
-    @test match(matchonly(DIGIT, not_after = WORD), str3).match == "3"
+    @test match(look_for(DIGIT, not_after = WORD), str3).match == "3"
 end
 
 @testset "Numbers" begin

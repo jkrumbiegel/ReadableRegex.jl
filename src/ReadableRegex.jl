@@ -19,7 +19,7 @@ export between
 export exactly
 export maybe
 export zero_or_more
-export matchonly
+export look_for
 export one_out_of
 export capture
 export reference
@@ -251,7 +251,7 @@ preceded_by(r, by) = RegexString("(?<=$(_c(by).s))" * noncapturing_group_or_toke
 not_preceded_by(r, by) = RegexString("(?<!$(_c(by).s))" * noncapturing_group_or_token(_c(r).s))
 
 
-function matchonly(r;
+function look_for(r;
         after = nothing,
         before = nothing,
         not_after = nothing,

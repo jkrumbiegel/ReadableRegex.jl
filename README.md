@@ -49,8 +49,8 @@ or use them directly with `match` and `eachmatch`.
 Let's say we wanted to extract all the possible integers from the list above. One way could be this:
 
 ```julia
-julia> reg = matchonly(
-                matchonly(
+julia> reg = look_for(
+                look_for(
                     maybe(chars("+-")) * one_or_more(DIGIT),
                     not_after = "."),
                 not_before = NON_SEPARATOR)
@@ -79,7 +79,7 @@ Note that the regex string representation is currently not the most sparse, as n
 | `maybe(target)` | Match zero or one repetitions of `target` |
 | `exactly(n, target)` | Match exactly `n` repetitions of `target` |
 | `zero_or_more(target)` | Match zero to infinity repetitions of `target` |
-| `matchonly(target; [after, before, not_after, not_before])` | Match `target` only if it is either `before`, `after`, `not_after`, or `not_before` other matches. Only one keyword can be set at a time. |
+| `look_for(target; [after, before, not_after, not_before])` | Match `target` only if it is either `before`, `after`, `not_after`, or `not_before` other matches. Only one keyword can be set at a time. |
 | `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match). |
 | `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
 | `reference(i::Int)` | Back reference to capture group number `i` (1 based counting) |
