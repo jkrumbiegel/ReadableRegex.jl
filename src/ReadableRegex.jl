@@ -13,12 +13,12 @@ export BEGIN
 export END
 export WORDBOUND
 export NON_WORDBOUND
-export at_least_one
+export one_or_more
 export at_least
 export between
 export exactly
 export maybe
-export any_of
+export zero_or_more
 export matchonly
 export one_out_of
 export capture
@@ -238,13 +238,13 @@ Base.convert(::Type{RegexString}, list::Union{AbstractVector, Tuple}) = one_out_
 _c(x) = convert(RegexString, x)
 
 # These are functions that give the typical regex logic building blocks.
-at_least_one(r) = RegexString(noncapturing_group_or_append(_c(r).s, "+"))
+one_or_more(r) = RegexString(noncapturing_group_or_append(_c(r).s, "+"))
 at_least(n::Int, r) = RegexString(noncapturing_group_or_append(_c(r).s, "{$n,}"))
 between(low::Int, high::Int, r) = RegexString(noncapturing_group_or_append(_c(r).s, "{$low,$high}"))
 exactly(n::Int, r) = RegexString(noncapturing_group_or_append(_c(r).s, "{$n}"))
 
 maybe(r) = RegexString(noncapturing_group_or_append(_c(r).s, "?"))
-any_of(r) = RegexString(noncapturing_group_or_append(_c(r).s, "*"))
+zero_or_more(r) = RegexString(noncapturing_group_or_append(_c(r).s, "*"))
 followed_by(r, by) = RegexString(noncapturing_group_or_token(_c(r).s) * "(?=$(_c(by).s))")
 not_followed_by(r, by) = RegexString(noncapturing_group_or_token(_c(r).s) * "(?!$(_c(by).s))")
 preceded_by(r, by) = RegexString("(?<=$(_c(by).s))" * noncapturing_group_or_token(_c(r).s))

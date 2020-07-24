@@ -9,9 +9,9 @@ using Test
     str4 = "Another Road 371a"
     str5 = "Another Road 371 "
 
-    r = BEGIN * at_least_one(WORD) *
-            any_of(WHITESPACE * at_least_one(WORD)) *
-            WHITESPACE * at_least_one(DIGIT) * END
+    r = BEGIN * one_or_more(WORD) *
+            zero_or_more(WHITESPACE * one_or_more(WORD)) *
+            WHITESPACE * one_or_more(DIGIT) * END
 
     @test match(r, str1).match == str1
     @test match(r, str2).match == str2
@@ -33,7 +33,7 @@ end
     @test match(matchonly(DIGIT, not_before = WORD), str).match == "2"
 
     str2 = "123 for me, 456 for you"
-    @test match(matchonly(at_least_one(DIGIT) , before = " for me"), str2).match == "123"
+    @test match(matchonly(one_or_more(DIGIT) , before = " for me"), str2).match == "123"
 
     str3 = "a2 3"
     @test match(matchonly(DIGIT, not_after = WORD), str3).match == "3"
@@ -43,7 +43,7 @@ end
     str = "1 2.0 .3 -.4 -5 60 700 800.9 +9000"
 
     matches = eachmatch(
-        maybe(["-", "+"]) * maybe(any_of(DIGIT) * ".") * at_least_one(DIGIT),
+        maybe(["-", "+"]) * maybe(zero_or_more(DIGIT) * ".") * one_or_more(DIGIT),
         str
     )
 
@@ -90,7 +90,7 @@ end
     reg = at_least(2, chars("mat"))
     @test match(reg, str).match == "matata"
 
-    reg2 = at_least_one(chars('h':'n', 'a', 'u'))
+    reg2 = one_or_more(chars('h':'n', 'a', 'u'))
     @test match(reg2, str).match == "hakuna"
 
     reg3 = at_least(2, not_chars(WHITESPACE, 'a'))

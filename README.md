@@ -24,8 +24,8 @@ regex = r"[\+-]?(?:\d*\.)?\d+"
 
 ```julia
 regex = maybe(["-", "+"]) *
-            maybe(any_of(DIGIT) * ".") *
-            at_least_one(DIGIT)
+            maybe(zero_or_more(DIGIT) * ".") *
+            one_or_more(DIGIT)
 ```
 
 Both of these match all kinds of floating point numbers like these:
@@ -51,7 +51,7 @@ Let's say we wanted to extract all the possible integers from the list above. On
 ```julia
 julia> reg = matchonly(
                 matchonly(
-                    maybe(chars("+-")) * at_least_one(DIGIT),
+                    maybe(chars("+-")) * one_or_more(DIGIT),
                     not_after = "."),
                 not_before = NON_SEPARATOR)
 
@@ -73,12 +73,12 @@ Note that the regex string representation is currently not the most sparse, as n
 
 | Function | Purpose |
 | --- | --- |
-| `at_least_one(target)` | Match one or more repetitions of `target`|
+| `one_or_more(target)` | Match one or more repetitions of `target`|
 | `at_least(n, target)` | Match at least `n` repetitions of `target`|
 | `between(low, high, target)` | Match between `low` and `high` repetitions of `target` |
 | `maybe(target)` | Match zero or one repetitions of `target` |
 | `exactly(n, target)` | Match exactly `n` repetitions of `target` |
-| `any_of(target)` | Match zero to infinity repetitions of `target` |
+| `zero_or_more(target)` | Match zero to infinity repetitions of `target` |
 | `matchonly(target; [after, before, not_after, not_before])` | Match `target` only if it is either `before`, `after`, `not_after`, or `not_before` other matches. Only one keyword can be set at a time. |
 | `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match). |
 | `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
@@ -120,7 +120,7 @@ Some predefined examples:
 Strings and Chars are escaped when converted, so you can use `.+[]^$` etc. without escaping them manually.
 
 ```julia
-at_least_one("+")
+one_or_more("+")
 maybe("[text in brackets]")
 ```
 
@@ -129,7 +129,7 @@ maybe("[text in brackets]")
 Char ranges can be used directly and match any char within the range.
 
 ```julia
-at_least_one('a':'z')
+one_or_more('a':'z')
 between(1, 4, '🌑':'🌘')
 ```
 
