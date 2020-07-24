@@ -1,7 +1,7 @@
 name = "ReadableRegex"
 uuid = "cbbcb084-453d-4c4c-b292-e315607ba6a4"
 authors = ["Julius Krumbiegel"]
-version = "0.1.0"
+version = "0.2.0"
 
 [compat]
 julia = "1"
