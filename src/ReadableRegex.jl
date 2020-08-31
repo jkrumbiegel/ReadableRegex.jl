@@ -21,7 +21,7 @@ export exactly
 export maybe
 export zero_or_more
 export look_for
-export one_out_of
+export either
 export capture
 export reference
 export char_in
@@ -234,7 +234,7 @@ Base.convert(::Type{RegexString}, s::String) = RegexString(escaped(s))
 Base.convert(::Type{RegexString}, rs::RegexString) = rs
 Base.convert(::Type{RegexString}, c::Char) = RegexString(escaped(string(c)))
 Base.convert(::Type{RegexString}, sr::StepRange{Char, Int}) = RegexString("[$(escaped(string(sr.start)))-$(escaped(string(sr.stop)))]")
-Base.convert(::Type{RegexString}, list::Union{AbstractVector, Tuple}) = one_out_of(list...)
+Base.convert(::Type{RegexString}, list::Union{AbstractVector, Tuple}) = either(list...)
 
 
 _c(x) = convert(RegexString, x)
@@ -275,7 +275,7 @@ function look_for(r;
     current
 end
 
-one_out_of(args...) = RegexString(noncapturing_group_or_token(join([noncapturing_group_or_token(_c(r).s) for r in args], "|")))
+either(args...) = RegexString(noncapturing_group_or_token(join([noncapturing_group_or_token(_c(r).s) for r in args], "|")))
 
 function capture(r; as = nothing)
     if isnothing(as)

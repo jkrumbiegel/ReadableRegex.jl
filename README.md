@@ -79,7 +79,7 @@ Note that the regex string representation is currently not as parsimonious as po
 | `exactly(n, target)` | Match exactly `n` repetitions of `target` |
 | `zero_or_more(target)` | Match zero to infinity repetitions of `target` |
 | `look_for(target; [after, before, not_after, not_before])` | Match `target` only if it is `before`, `after`, `not_after`, or `not_before` other matches. You can set multiple keywords at once. |
-| `one_out_of(targets...)` | Match one target out of all given `targets` (the first in order if multiple could match). |
+| `either(targets...)` | Match either the first, or the second, etc... target in `targets`, in order of appearance. |
 | `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
 | `reference(i::Int)` | Back reference to capture group number `i` (1 based counting) |
 | `reference(name)` | Back reference to the capture group named `name` |
@@ -134,7 +134,7 @@ between(1, 4, '🌑':'🌘')
 
 ### `AbstractVector` and `Tuple`
 
-Using an AbstractVector or a Tuple is the same as calling `one_out_of(vec_or_tup...)`.
+Using an AbstractVector or a Tuple is the same as calling `either(vec_or_tup...)`.
 That means you can use any element that is itself convertible to a `RegexString`.
 
 ```julia
