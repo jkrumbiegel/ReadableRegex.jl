@@ -104,4 +104,11 @@ end
 
     reg3 = at_least(2, char_not_in(WHITESPACE, 'a'))
     @test match(reg3, str).match == "kun"
+
+
+    str = "-"
+    reg = char_in("a-z") # this should give three chars, not a range
+    @test match(reg, str).match == "-"
+    reg2 = char_in('a':'z') # this should give a range
+    @test match(reg2, str) === nothing
 end
