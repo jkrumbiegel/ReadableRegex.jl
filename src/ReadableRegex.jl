@@ -2,6 +2,7 @@ module ReadableRegex
 
 export RegexString
 export @rs_str
+
 export WORD
 export NON_WORD
 export DIGIT
@@ -14,6 +15,7 @@ export BEGIN
 export END
 export WORDBOUND
 export NON_WORDBOUND
+
 export one_or_more
 export at_least
 export between
@@ -27,6 +29,16 @@ export reference
 export char_in
 export char_not_in
 export @compile
+export lazy_zero_or_more
+export lazy_one_or_more
+export lazy_between
+export lazy_maybe
+export lazy_at_least
+export possessive_zero_or_more
+export possessive_one_or_more
+export possessive_between
+# export possessive_maybe
+export possessive_at_least
 
 export LETTER
 export UPPERCASE
@@ -252,6 +264,17 @@ not_followed_by(r, by) = RegexString(noncapturing_group_or_token(_c(r).s) * "(?!
 preceded_by(r, by) = RegexString("(?<=$(_c(by).s))" * noncapturing_group_or_token(_c(r).s))
 not_preceded_by(r, by) = RegexString("(?<!$(_c(by).s))" * noncapturing_group_or_token(_c(r).s))
 
+lazy_zero_or_more(r) = zero_or_more(r) * rs"?"
+lazy_one_or_more(r) = one_or_more(r) * rs"?"
+lazy_between(low, high, r) = between(low, high, r) * rs"?"
+lazy_maybe(r) = maybe(r) * rs"?"
+lazy_at_least(n, r) = at_least(n, r) * rs"?"
+
+possessive_zero_or_more(r) = zero_or_more(r) * rs"+"
+possessive_one_or_more(r) = one_or_more(r) * rs"+"
+possessive_between(low, high, r) = between(low, high, r) * rs"+"
+# possessive_maybe(r) = maybe(r) * rs"+"
+possessive_at_least(n, r) = at_least(n, r) * rs"+"
 
 function look_for(r;
         after = nothing,

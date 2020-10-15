@@ -112,3 +112,43 @@ end
     reg2 = char_in('a':'z') # this should give a range
     @test match(reg2, str) === nothing
 end
+
+@testset "lazy and possessive quantifiers" begin
+
+    str = "abcabcabc"
+
+    @test match(maybe("abc"), str).match == "abc"
+    @test match(lazy_maybe("abc"), str).match == ""
+
+    @test match(at_least(2, "abc"), str).match == str
+    @test match(lazy_at_least(2, "abc"), str).match == "abcabc"
+
+    @test match(zero_or_more("abc"), str).match == str
+    @test match(lazy_zero_or_more("abc"), str).match == ""
+
+    @test match(one_or_more("abc"), str).match == str
+    @test match(lazy_one_or_more("abc"), str).match == "abc"
+
+    @test match(between(2, 3, "abc"), str).match == str
+    @test match(lazy_between(2, 3, "abc"), str).match == "abcabc"
+
+    str2 = "1234"
+
+    @test match(one_or_more(DIGIT) * "4", str2).match == "1234"
+    @test match(possessive_one_or_more(DIGIT) * "4", str2) === nothing
+
+    @test match(zero_or_more(DIGIT) * "4", str2).match == "1234"
+    @test match(possessive_zero_or_more(DIGIT) * "4", str2) === nothing
+
+    @test match(between(1, 4, DIGIT) * "4", str2).match == "1234"
+    @test match(possessive_between(1, 4, DIGIT) * "4", str2) === nothing
+
+    @test match(at_least(2, DIGIT) * "4", str2).match == "1234"
+    @test match(possessive_at_least(2, DIGIT) * "4", str2) === nothing
+
+    # don't quite understand why this doesn't work, leave it out for now
+    # str3 = "123"
+
+    # @test match(maybe("123") * "3", str3).match == "3"
+    # @test match(possessive_maybe("123") * "3", str3) === nothing
+end

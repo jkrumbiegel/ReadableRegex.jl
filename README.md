@@ -72,12 +72,13 @@ Note that the regex string representation is currently not as parsimonious as po
 
 | Function | Purpose |
 | --- | --- |
+| `exactly(n, target)` | Match exactly `n` repetitions of `target` |
+| `maybe(target)` | Match zero or one repetitions of `target` |
+| `zero_or_more(target)` | Match zero to infinity repetitions of `target` |
 | `one_or_more(target)` | Match one or more repetitions of `target`|
 | `at_least(n, target)` | Match at least `n` repetitions of `target`|
 | `between(low, high, target)` | Match between `low` and `high` repetitions of `target` |
-| `maybe(target)` | Match zero or one repetitions of `target` |
-| `exactly(n, target)` | Match exactly `n` repetitions of `target` |
-| `zero_or_more(target)` | Match zero to infinity repetitions of `target` |
+| `lazy_` or `possessive_` quantifier functions (e.g., `lazy_zero_or_more`) | Lazy (as few matches as possible) or possessive (as many matches as possible without backtracking) versions of the above quantifier functions. Defaults are greedy (as many matches as possible, with backtracking). |
 | `look_for(target; [after, before, not_after, not_before])` | Match `target` only if it is `before`, `after`, `not_after`, or `not_before` other matches. You can set multiple keywords at once. |
 | `either(targets...)` | Match either the first, or the second, etc... target in `targets`, in order of appearance. |
 | `capture(target; [as])` | Create a numbered capture group that you can back reference, or name it optionally with the `as` keyword. |
