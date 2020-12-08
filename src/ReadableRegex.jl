@@ -330,6 +330,7 @@ Base.:*(r::RegexString, anything) = r * convert(RegexString, anything)
 
 
 Base.Regex(r::RegexString) = Regex(r.s)
+Base.Regex(r::RegexString, flags) = Regex(r.s, flags)
 Base.match(rs::RegexString, x) = Base.match(Regex(rs), x)
 Base.eachmatch(rs::RegexString, x) = Base.eachmatch(Regex(rs), x)
 
