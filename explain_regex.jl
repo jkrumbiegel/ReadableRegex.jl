@@ -5,8 +5,6 @@ using JuliaFormatter
 ##
 
 rules = Dict(
-    # match a sequence of characters that satisfies `isdigit`
-    # :digits => P.one_or_more(:digit => P.satisfy(isdigit)),
     :char => P.satisfy(x -> x ∉ ['\\', '?', '+', '-', '[', ']', '(', ')']),
     :setchar => P.satisfy(x -> x ∉ ['\\', '-', ']']),
     :setcharrange => P.seq(
@@ -27,9 +25,11 @@ rules = Dict(
         :setcontents,
         P.token(']')
     ),
-    :expr => P.first(:maybe, :not_set, :set, :char),
+    :expr => P.first(:zero_or_more, :one_or_more, :maybe, :not_set, :set, :char),
     :regex => P.one_or_more(:expr),
     :maybe => P.seq(:expr, P.token('?')),
+    :one_or_more => P.seq(:expr, P.token('+')),
+    :zero_or_more => P.seq(:expr, P.token('*')),
 )
 
 g = P.make_grammar(
@@ -63,8 +63,9 @@ function explain_regex(reg::Regex)
             rule == :setcontent ? subvals[1] :
             rule == :setcontents ? subvals :
             rule == :setcharrange ? (subvals[1]:subvals[3]) :
-            rule == :string ? String(input[match.pos:match.pos+match.len-1]) :
             rule == :maybe ? Expr(:call, :maybe, subvals[1]) :
+            rule == :one_or_more ? Expr(:call, :one_or_more, subvals[1]) :
+            rule == :zero_or_more ? Expr(:call, :zero_or_more, subvals[1]) :
             nothing
     end)
 
@@ -72,5 +73,5 @@ function explain_regex(reg::Regex)
     print_formatted(expr)
 end
 
-explain_regex(r"hi[a-z]?")
-explain_regex(r"hiyaa?")
+explain_regex(r"hi+[a-z]?")
+explain_regex(r"hiy*aa?")
