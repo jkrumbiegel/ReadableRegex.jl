@@ -152,3 +152,21 @@ end
     # @test match(maybe("123") * "3", str3).match == "3"
     # @test match(possessive_maybe("123") * "3", str3) === nothing
 end
+
+@testset "emails" begin
+
+    letters = 'a':'z'
+    reg = BEGIN * letters * lazy_zero_or_more([DIGIT, letters, "_"]) * "@" * 
+        letters * lazy_zero_or_more([DIGIT, letters, "_"]) * "." * between(2, 3, letters) * END
+
+    addresses = [
+        "hello@cool.com",
+        "yoohoo23_@hit23.de",
+        "   invalid@you.com",
+        "123@456.de",
+    ]    
+
+    matches = [m.match for m in filter(!isnothing, match.(Ref(reg), addresses))]
+    @show matches
+
+end

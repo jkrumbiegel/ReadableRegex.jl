@@ -3,6 +3,10 @@ uuid = "cbbcb084-453d-4c4c-b292-e315607ba6a4"
 authors = ["Julius Krumbiegel"]
 version = "0.3.2"
 
+[deps]
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
+PikaParser = "3bbf5609-3e7b-44cd-8549-7c69f321e792"
+
 [compat]
 julia = "1"
 
