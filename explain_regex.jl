@@ -5,7 +5,7 @@ using ReadableRegex
 
 ##
 
-special_characters = ['\\', '.', '?', '+', '-', '[', ']', '(', ')', '|', '^', '$']
+special_characters = ['\\', '.', '?', '+', '[', ']', '(', ')', '|', '^', '$']
 escape_invariants = ['-', '@', ':']
 specializable = ['d', 'w']
 
@@ -136,7 +136,7 @@ function explain_regex(reg::Regex)
     p = P.parse(g, input)
 
     i = P.find_match_at(g, p, :sequence, 1)
-    print_formatted(P.traverse_match(g, p, i, :sequence))
+    # print_formatted(P.traverse_match(g, p, i, :sequence))
 
     expr = P.traverse_match(g, p, i, :sequence,
         fold = function(rule, match, subvals)
@@ -218,14 +218,14 @@ function collapse_mult(subvals)
     end
 end
 
-@test explain_regex(r"hi+[^a-z]\??") == :('h' * one_or_more('i') * char_not_in('a':1:'z') * maybe('?'))
+explain_regex(r"hi+[^a-z]\??")
 explain_regex(r"hi+[^a-z]{8}")
 explain_regex(r"hi+[^a-z]{8,}")
 explain_regex(r"hi+[^a-z]{8,10}")
 explain_regex(r"(?:x?)")
 explain_regex(r"(?:hi+[^a-z]){8,10}")
 explain_regex(r"(?:(?:x))")
-@test explain_regex(r"hiy*(aa?)") == :('h' * 'i' * zero_or_more('y') * capture('a' * maybe('a')))
+explain_regex(r"hiy*(aa?)")
 explain_regex(r"a|bce")
 explain_regex(r"a|b|c|d")
 explain_regex(r"abc|cd")
@@ -240,8 +240,11 @@ explain_regex(r"(?<=a)b")
 explain_regex(r"a(?!b)")
 explain_regex(r"(^\d*\.?\d*[1-9]+\d*$)|(^[1-9]+\d*\.\d*$)")
 
-@test explain_regex(r"(?<title>xyz)") == :(capture('x' * 'y' * 'z', as = "title"))
-@test explain_regex(r"(?<title>xyz)\k<title>") == :(capture('x' * 'y' * 'z', as = "title") * reference("title"))
+explain_regex(r"(?<title>xyz)")
+explain_regex(r"(?<title>xyz)\k<title>")
 
 explain_regex(r"(?<title>\w+), yes \k<title>");
 explain_regex(r"(^\d*\.?\d*[1-9]+\d*$)");
+
+explain_regex(r"^-?[0-9]{0,2}(\.[0-9]{1,2})?$|^-?(100)(\.[0]{1,2})?$")
+
