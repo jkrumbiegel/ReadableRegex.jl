@@ -139,7 +139,7 @@ function explain_regex(reg::Regex)
     # print_formatted(P.traverse_match(g, p, i, :sequence))
 
     expr = P.traverse_match(g, p, i, :sequence,
-        fold = function(rule, match, subvals)
+        fold=function (rule, match, subvals)
             rule == :sequence ? collapse_mult(subvals) :
             rule == :char ? only(input[match.pos:match.pos+match.len-1]) :
             rule == :special_char ? only(input[match.pos:match.pos+match.len-1]) :
@@ -169,19 +169,19 @@ function explain_regex(reg::Regex)
             rule == :integer ? parse(Int, String(input[match.pos:match.pos+match.len-1])) :
             rule == :noncapturing_group ? subvals[4] :
             rule == :capturing_group ? Expr(:call, :capture, subvals[2]) :
-            rule == :named_capturing_group ? :(capture($(subvals[6]), as = $(subvals[4]))) :
+            rule == :named_capturing_group ? :(capture($(subvals[6]), as=$(subvals[4]))) :
             rule == :either ? collapse_either(subvals[1], subvals[3]) :
             rule == :_begin ? :BEGIN :
             rule == :_end ? :END :
             rule == :dot ? :NON_LINEBREAK :
-            rule == :negative_lookahead ? :(look_for($(subvals[1]), not_before = $(subvals[5]))) :
-            rule == :positive_lookahead ? :(look_for($(subvals[1]), before = $(subvals[5]))) :
-            rule == :positive_lookbehind ? :(look_for($(subvals[7]), after = $(subvals[5]))) :
-            rule == :negative_lookbehind ? :(look_for($(subvals[7]), not_after = $(subvals[5]))) :
+            rule == :negative_lookahead ? :(look_for($(subvals[1]), not_before=$(subvals[5]))) :
+            rule == :positive_lookahead ? :(look_for($(subvals[1]), before=$(subvals[5]))) :
+            rule == :positive_lookbehind ? :(look_for($(subvals[7]), after=$(subvals[5]))) :
+            rule == :negative_lookbehind ? :(look_for($(subvals[7]), not_after=$(subvals[5]))) :
             rule == :namestring ? String(input[match.pos:match.pos+match.len-1]) :
             rule == :named_backreference ? :(reference($(subvals[4]))) :
             nothing
-    end)
+        end)
 
     println("Explanation of ", reg.pattern)
     println("=============================")
@@ -202,7 +202,7 @@ function collapse_mult(subvals)
     if length(subvals) == 1
         only(subvals)
     else
-        args = foldl(subvals; init = []) do l, r
+        args = foldl(subvals; init=[]) do l, r
             if !isempty(l) && r isa Char && (l[end] isa Char || l[end] isa String)
                 l[end] = string(l[end], r)
             else
@@ -212,7 +212,7 @@ function collapse_mult(subvals)
         end
         if length(args) == 1
             only(args)
-        else 
+        else
             Expr(:call, :*, args...)
         end
     end
@@ -248,3 +248,15 @@ explain_regex(r"(^\d*\.?\d*[1-9]+\d*$)");
 
 explain_regex(r"^-?[0-9]{0,2}(\.[0-9]{1,2})?$|^-?(100)(\.[0]{1,2})?$")
 
+either(
+    BEGIN *
+    maybe('-') *
+    between(0, 2, char_in('0':1:'9')) *
+    maybe(capture('.' * between(1, 2, char_in('0':1:'9')))) *
+    END,
+    BEGIN *
+    maybe('-') *
+    capture("100") *
+    maybe(capture('.' * between(1, 2, char_in('0')))) *
+    END,
+)
